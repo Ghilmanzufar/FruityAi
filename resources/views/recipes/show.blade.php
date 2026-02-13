@@ -1,77 +1,48 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-slate-50 min-h-screen py-10">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-slate-50">
+    <div class="max-w-4xl mx-auto">
         
-        <a href="{{ route('recipes.index') }}" class="inline-flex items-center text-slate-500 hover:text-emerald-600 font-medium mb-6 transition-colors">
-            <i class="fa-solid fa-arrow-left mr-2"></i> Kembali ke Katalog
-        </a>
-
-        <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
-            <div class="grid grid-cols-1 lg:grid-cols-2">
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 mb-8">
+            <div class="relative h-64 md:h-96 w-full">
+                <img src="{{ $recipe->image_url }}" alt="{{ $recipe->title }}" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 
-                <div class="relative h-96 lg:h-auto">
-                    <img src="{{ $recipe->image_url }}" alt="{{ $recipe->title }}" class="absolute inset-0 w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent lg:hidden"></div>
+                <div class="absolute bottom-0 left-0 p-8 w-full">
+                    <span class="bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-2 inline-block">
+                        {{ $recipe->main_ingredient }}
+                    </span>
+
+                    <h1 class="text-3xl md:text-4xl font-bold text-white mb-2 leading-tight">
+                        {{ $recipe->title }}
+                    </h1>
                     
-                    <div class="absolute bottom-0 left-0 p-6 text-white lg:hidden">
-                        <span class="bg-emerald-500 text-xs font-bold px-2 py-1 rounded uppercase tracking-wide">
-                            {{ $recipe->main_ingredient }}
-                        </span>
-                        <h1 class="text-3xl font-bold mt-2 shadow-sm">{{ $recipe->title }}</h1>
+                    <div class="flex items-center text-slate-200 text-sm gap-4">
+                        <span class="flex items-center gap-1"><i class="fa-regular fa-clock"></i> {{ $recipe->cooking_time }} Menit</span>
+                        <span class="flex items-center gap-1"><i class="fa-solid fa-fire"></i> {{ $recipe->calories ?? '-' }} kkal</span>
                     </div>
                 </div>
+            </div>
 
-                <div class="p-8 lg:p-12 flex flex-col justify-center">
-                    
-                    <div class="hidden lg:block mb-6">
-                        <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-                            Bahan Utama: {{ ucfirst($recipe->main_ingredient) }}
-                        </span>
-                        <h1 class="text-4xl font-bold text-slate-800 mt-3 leading-tight">{{ $recipe->title }}</h1>
-                    </div>
-
-                    <p class="text-slate-500 text-lg mb-8 leading-relaxed">
-                        {{ $recipe->description }}
-                    </p>
-
-                    <div class="grid grid-cols-3 gap-4 border-t border-b border-slate-100 py-6 mb-8">
-                        <div class="text-center">
-                            <i class="fa-regular fa-clock text-emerald-500 text-xl mb-1"></i>
-                            <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Waktu</p>
-                            <p class="font-bold text-slate-700">{{ $recipe->cooking_time }} Menit</p>
-                        </div>
-                        <div class="text-center border-l border-slate-100">
-                            <i class="fa-solid fa-fire-flame-curved text-orange-400 text-xl mb-1"></i>
-                            <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Kalori</p>
-                            <p class="font-bold text-slate-700">{{ $recipe->calories }} kkal</p>
-                        </div>
-                        <div class="text-center border-l border-slate-100">
-                            <i class="fa-solid fa-list-check text-blue-400 text-xl mb-1"></i>
-                            <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Bahan</p>
-                            <p class="font-bold text-slate-700">{{ count($recipe->ingredients) }} Item</p>
-                        </div>
-                    </div>
-
-                    <button onclick="startCooking()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 rounded-xl shadow-lg transition-transform transform hover:-translate-y-1">
-                        <i class="fa-solid fa-play mr-2"></i> Mulai Masak Sekarang
-                    </button>
-                </div>
+            <div class="p-8 border-b border-slate-100">
+                <p class="text-slate-600 leading-relaxed text-lg italic">
+                    "{{ $recipe->description }}"
+                </p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 sticky top-24">
-                    <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                        <i class="fa-solid fa-basket-shopping text-emerald-500"></i> Bahan-bahan
+            <div class="md:col-span-1">
+                <div class="bg-white rounded-3xl shadow-lg p-6 border border-slate-100 sticky top-4">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-basket-shopping text-emerald-500"></i> Bahan
                     </h3>
-                    <ul class="space-y-4">
+                    <ul class="space-y-3">
                         @foreach($recipe->ingredients as $ingredient)
-                        <li class="flex items-start gap-3 text-slate-600">
-                            <i class="fa-regular fa-circle-check text-emerald-400 mt-1"></i>
+                        <li class="flex items-start gap-3 text-slate-600 text-sm">
+                            <i class="fa-solid fa-check text-emerald-400 mt-1"></i>
                             <span>{{ $ingredient }}</span>
                         </li>
                         @endforeach
@@ -79,166 +50,222 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
+            <div class="md:col-span-2">
+                <div class="bg-white rounded-3xl shadow-lg p-8 border border-slate-100">
                     <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                        <i class="fa-solid fa-hat-chef text-emerald-500"></i> Cara Membuat
+                        <i class="fa-solid fa-fire-burner text-orange-500"></i> Cara Membuat
                     </h3>
                     
-                    <div id="stepsContainer" class="space-y-8"> 
+                    <div class="space-y-8">
                         @foreach($recipe->steps as $index => $step)
                         <div class="flex gap-4">
-                            <div class="flex-shrink-0 w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold text-lg">
+                            <div class="flex-shrink-0 w-8 h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold text-sm">
                                 {{ $index + 1 }}
                             </div>
-                            <div>
-                                <p class="step-text text-slate-600 leading-relaxed text-lg">
-                                    {{ $step }}
-                                </p>
-                            </div>
+                            <p class="text-slate-600 leading-relaxed mt-1">
+                                {{ $step }}
+                            </p>
                         </div>
-                        @if(!$loop->last)
-                            <hr class="border-slate-50 ml-14">
-                        @endif
                         @endforeach
                     </div>
 
                     <div class="mt-10 bg-emerald-50 rounded-xl p-6 text-center border border-emerald-100">
                         <h3 class="text-emerald-800 font-bold text-lg mb-2">Selamat Menikmati! 🍽️</h3>
-                        <p class="text-emerald-600 text-sm mb-4">Berhasil masak ini? Pamerkan ke teman-temanmu!</p>
-                        
+                        <p class="text-emerald-600 text-sm mb-4">Berhasil masak ini? Share ke teman-temanmu!</p>
                         <div class="flex justify-center gap-3">
-                            <a href="https://wa.me/?text=Saya%20baru%20saja%20mencoba%20resep%20*{{ urlencode($recipe->title) }}*%20di%20Aplikasi%20Resep!%20Enak%20banget!%20😋" 
-                            target="_blank" 
-                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-sm">
-                                <i class="fa-brands fa-whatsapp text-lg"></i> Share WA
-                            </a>
-
-                            <a href="https://twitter.com/intent/tweet?text=Baru%20masak%20{{ urlencode($recipe->title) }}%20nih!%20Mantap." 
-                            target="_blank"
-                            class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-sm">
-                                <i class="fa-brands fa-x-twitter text-lg"></i> Tweet
+                            <a href="https://wa.me/?text=Coba%20resep%20*{{ urlencode($recipe->title) }}*%20ini,%20enak%20banget!" target="_blank" class="bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-green-600 transition">
+                                <i class="fa-brands fa-whatsapp"></i> WhatsApp
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
+        <div class="mt-8 border-t border-slate-200 pt-8 pb-12">
+            
+            @if(isset($recipe->id))
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="{{ route('recipes.index') }}" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-arrow-left"></i> Kembali
+                    </a>
+
+                    <button onclick="openCookingMode()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-emerald-200 transition transform hover:scale-105 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i> Mulai Masak (Step-by-Step)
+                    </button>
+                </div>
+            @endif
+
+            @if(!isset($recipe->id)) 
+                <div class="bg-purple-50 border border-purple-200 rounded-2xl p-6 text-center shadow-lg">
+                    <h3 class="text-purple-800 font-bold text-lg mb-2">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Resep AI Generated
+                    </h3>
+                    <p class="text-purple-600 text-sm mb-4">Simpan resep ini agar tidak hilang!</p>
+                    <form action="{{ route('recipes.store-ai') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="title" value="{{ $recipe->title }}">
+                        <input type="hidden" name="description" value="{{ $recipe->description }}">
+                        <input type="hidden" name="cooking_time" value="{{ $recipe->cooking_time }}">
+                        <input type="hidden" name="calories" value="{{ $recipe->calories }}">
+                        <input type="hidden" name="main_ingredient" value="{{ $recipe->main_ingredient }}">
+                        <input type="hidden" name="image_url" value="{{ $recipe->image_url }}">
+                        @foreach($recipe->ingredients as $ing) <input type="hidden" name="ingredients[]" value="{{ $ing }}"> @endforeach
+                        @foreach($recipe->steps as $step) <input type="hidden" name="steps[]" value="{{ $step }}"> @endforeach
+                        
+                        <div class="flex justify-center gap-4">
+                            <button type="submit" class="bg-purple-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg">Simpan</button>
+                            <a href="{{ route('recipes.index') }}" class="bg-white text-slate-500 font-bold py-3 px-6 rounded-xl border">Batal</a>
+                        </div>
+                    </form>
+                </div>
+            @endif
+        </div>
     </div>
 </div>
 
-<div id="cookingModeModal" class="fixed inset-0 z-50 bg-white hidden flex-col transition-opacity duration-300">
-    <div class="flex items-center justify-between p-6 border-b border-slate-100">
-        <div class="flex-1 mr-4">
-            <p class="text-xs text-slate-400 font-bold mb-1 uppercase tracking-wider">Langkah <span id="currentStepNum">1</span> dari <span id="totalSteps">0</span></p>
-            <div class="w-full bg-slate-100 rounded-full h-2">
-                <div id="progressBar" class="bg-emerald-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+<div id="cookingOverlay" class="fixed inset-0 bg-slate-900 z-50 hidden flex-col transition-opacity duration-300 opacity-0">
+    
+    <div class="bg-slate-800 p-4 flex justify-between items-center shadow-lg relative z-10">
+        <h2 class="text-white font-bold text-lg truncate pr-4">{{ $recipe->title }}</h2>
+        <button onclick="closeCookingMode()" class="text-slate-400 hover:text-white transition bg-slate-700 hover:bg-slate-600 rounded-lg px-3 py-1 text-sm font-bold">
+            <i class="fa-solid fa-xmark mr-1"></i> Tutup
+        </button>
+    </div>
+
+    <div class="flex-grow flex items-center justify-center p-6 pb-40 relative overflow-y-auto">
+        
+        <div class="w-full max-w-2xl text-center">
+            <span class="inline-block bg-emerald-600 text-white text-sm font-bold px-3 py-1 rounded-full mb-6 shadow-lg shadow-emerald-500/30">
+                Langkah <span id="stepCounter">1</span> dari <span id="totalSteps">{{ count($recipe->steps) }}</span>
+            </span>
+
+            <div id="stepContainer" class="min-h-[200px] flex items-center justify-center">
+                <h3 id="stepText" class="text-2xl md:text-4xl font-bold text-white leading-relaxed animate-fade-in">
+                    Loading...
+                </h3>
             </div>
         </div>
-        <button onclick="closeCookingMode()" class="p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-red-500 transition">
-            <i class="fa-solid fa-xmark text-2xl"></i>
-        </button>
+
     </div>
 
-    <div class="flex-1 flex items-center justify-center p-8 text-center bg-slate-50">
-        <div class="max-w-2xl">
-            <h2 id="stepText" class="text-2xl md:text-4xl font-bold text-slate-800 leading-snug">
-                Siapkan bahan...
-            </h2>
+    <div class="absolute bottom-0 left-0 w-full bg-slate-800 p-6 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.3)] z-20 border-t border-slate-700">
+        
+        <div class="max-w-2xl mx-auto flex justify-between gap-4">
+            <button id="prevBtn" onclick="prevStep()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-chevron-left mr-2"></i> Sebelumnya
+            </button>
+            
+            <button id="nextBtn" onclick="nextStep()" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-xl transition shadow-lg shadow-emerald-500/20">
+                Selanjutnya <i class="fa-solid fa-chevron-right ml-2"></i>
+            </button>
+            
+            <button id="finishBtn" onclick="closeCookingMode()" class="hidden flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 rounded-xl transition shadow-lg shadow-blue-500/20">
+                Selesai Masak! <i class="fa-solid fa-check ml-2"></i>
+            </button>
         </div>
+        
+        <div class="mt-6 w-full bg-slate-700 rounded-full h-2">
+            <div id="progressBar" class="bg-emerald-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+
     </div>
 
-    <div class="p-6 bg-white border-t border-slate-100 flex justify-between items-center">
-        <button onclick="prevStep()" id="btnPrev" class="px-6 py-3 rounded-xl border border-slate-300 text-slate-600 font-bold hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition">
-            <i class="fa-solid fa-arrow-left mr-2"></i> Sebelumnya
-        </button>
-        <button onclick="nextStep()" id="btnNext" class="px-8 py-3 rounded-xl bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-200 hover:bg-emerald-600 hover:scale-105 transition transform flex items-center">
-            Selanjutnya <i class="fa-solid fa-arrow-right ml-2"></i>
-        </button>
-    </div>
 </div>
 
-
 <script>
+    // DATA DARI PHP KE JS
+    const steps = @json($recipe->steps);
     let currentStepIndex = 0;
-    let stepsData = [];
 
-    function startCooking() {
-        // 1. Ambil teks dari langkah-langkah yang sudah kita tandai di Langkah 1
-        const stepElements = document.querySelectorAll('#stepsContainer .step-text');
+    // ELEMENT REF
+    const overlay = document.getElementById('cookingOverlay');
+    const stepText = document.getElementById('stepText');
+    const stepCounter = document.getElementById('stepCounter');
+    const progressBar = document.getElementById('progressBar');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const finishBtn = document.getElementById('finishBtn');
+
+    // FUNGSI BUKA MODE MASAK
+    function openCookingMode() {
+        overlay.classList.remove('hidden');
+        // Sedikit delay biar animasi opacity jalan halus
+        setTimeout(() => {
+            overlay.classList.remove('opacity-0');
+        }, 10);
         
-        stepsData = [];
-        stepElements.forEach(el => {
-            // Bersihkan spasi berlebih
-            stepsData.push(el.innerText.trim());
-        });
-
-        if (stepsData.length === 0) {
-            alert("Tidak ada langkah memasak yang ditemukan!");
-            return;
-        }
-
-        // 2. Tampilkan Layar Fullscreen
-        const modal = document.getElementById('cookingModeModal');
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-
-        // 3. Mulai dari langkah pertama
-        currentStepIndex = 0;
-        renderStep();
+        currentStepIndex = 0; // Mulai dari awal
+        updateUI();
     }
 
+    // FUNGSI TUTUP MODE MASAK
     function closeCookingMode() {
-        const modal = document.getElementById('cookingModeModal');
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        overlay.classList.add('opacity-0');
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+        }, 300);
     }
 
-    function renderStep() {
-        // Update Teks
-        document.getElementById('stepText').innerText = stepsData[currentStepIndex];
+    // UPDATE TAMPILAN
+    function updateUI() {
+        // Update Teks Langkah
+        stepText.classList.remove('animate-fade-in');
+        void stepText.offsetWidth; // Trigger reflow buat reset animasi
+        stepText.classList.add('animate-fade-in');
         
-        // Update Angka Indikator
-        document.getElementById('currentStepNum').innerText = currentStepIndex + 1;
-        document.getElementById('totalSteps').innerText = stepsData.length;
+        stepText.innerText = steps[currentStepIndex];
+        stepCounter.innerText = currentStepIndex + 1;
 
         // Update Progress Bar
-        const percentage = ((currentStepIndex + 1) / stepsData.length) * 100;
-        document.getElementById('progressBar').style.width = `${percentage}%`;
+        const progress = ((currentStepIndex + 1) / steps.length) * 100;
+        progressBar.style.width = `${progress}%`;
 
         // Atur Tombol
-        const btnPrev = document.getElementById('btnPrev');
-        const btnNext = document.getElementById('btnNext');
+        prevBtn.disabled = currentStepIndex === 0;
 
-        btnPrev.disabled = (currentStepIndex === 0);
-
-        if (currentStepIndex === stepsData.length - 1) {
-            btnNext.innerHTML = 'Selesai <i class="fa-solid fa-check ml-2"></i>';
-            btnNext.onclick = closeCookingMode;
-            btnNext.classList.remove('bg-emerald-500');
-            btnNext.classList.add('bg-slate-800');
+        if (currentStepIndex === steps.length - 1) {
+            nextBtn.classList.add('hidden');
+            finishBtn.classList.remove('hidden');
         } else {
-            btnNext.innerHTML = 'Selanjutnya <i class="fa-solid fa-arrow-right ml-2"></i>';
-            btnNext.onclick = nextStep;
-            btnNext.classList.add('bg-emerald-500');
-            btnNext.classList.remove('bg-slate-800');
+            nextBtn.classList.remove('hidden');
+            finishBtn.classList.add('hidden');
         }
     }
 
+    // NAVIGASI
     function nextStep() {
-        if (currentStepIndex < stepsData.length - 1) {
+        if (currentStepIndex < steps.length - 1) {
             currentStepIndex++;
-            renderStep();
+            updateUI();
         }
     }
 
     function prevStep() {
         if (currentStepIndex > 0) {
             currentStepIndex--;
-            renderStep();
+            updateUI();
         }
     }
+
+    // KEYBOARD SHORTCUT (Panah Kanan/Kiri)
+    document.addEventListener('keydown', function(event) {
+        if (!overlay.classList.contains('hidden')) {
+            if (event.key === "ArrowRight") nextStep();
+            if (event.key === "ArrowLeft") prevStep();
+            if (event.key === "Escape") closeCookingMode();
+        }
+    });
 </script>
+
+<style>
+    /* Animasi kecil buat teks */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
+</style>
 @endsection

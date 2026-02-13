@@ -26,7 +26,7 @@
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Bahan Utama (Deteksi AI)</label>
                             <select name="main_ingredient" class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all outline-none">
-                                @php $ingredients = ['banana','avocado','orange','apple','mango','watermelon','papaya','pineapple','dragonfruit','strawberry','durian','jackfruit','soursop','breadfruit','lime','mangosteen','snakefruit','starfruit','longan','melon','guava']; @endphp
+                                @php $ingredients = ['banana','avocado', 'markisa','orange', 'kurma','leci', 'cherry', 'kiwi' ,'apple','mango','watermelon','papaya','pineapple','dragonfruit','strawberry','durian','jackfruit','soursop','breadfruit','lime','mangosteen','snakefruit','starfruit','longan','melon','guava', 'grape']; @endphp
                                 @foreach($ingredients as $ing)
                                     <option value="{{ $ing }}" {{ $recipe->main_ingredient == $ing ? 'selected' : '' }}>{{ ucfirst($ing) }}</option>
                                 @endforeach

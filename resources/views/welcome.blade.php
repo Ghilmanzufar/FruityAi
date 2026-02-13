@@ -15,11 +15,13 @@
             <p class="text-lg text-slate-500 mb-8 max-w-lg mx-auto lg:mx-0">
                 Cukup foto isi kulkasmu. Biarkan AI kami mendeteksi bahannya dan merekomendasikan resep sehat untukmu.
             </p>
+            
             <div class="flex gap-4 justify-center lg:justify-start">
                 <a href="{{ route('scan.index') }}" class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-emerald-200/50 transition-all flex items-center gap-2">
                     <i class="fa-solid fa-camera"></i> Coba Scan Sekarang
                 </a>
-                <button onclick="openDemoModal()" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-8 py-4 rounded-xl font-bold transition-all flex items-center gap-2">
+                
+                <button onclick="openDemoModal()" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-8 py-4 rounded-xl font-bold transition-all flex items-center gap-2 shadow-sm hover:shadow-md">
                     <i class="fa-regular fa-circle-play text-emerald-500 text-xl"></i> Lihat Demo
                 </button>
             </div>
@@ -67,63 +69,91 @@
         </div>
     </div>
 </section>
-<div id="demoModal" class="fixed inset-0 z-[100] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+
+<div id="demoModal" class="fixed inset-0 z-[9999] hidden items-center justify-center">
     
-    <div class="relative w-full max-w-5xl bg-black rounded-3xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="modalContent">
+    <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm transition-opacity" onclick="closeDemoModal()"></div>
+
+    <div class="relative w-full max-w-4xl mx-4 bg-black rounded-2xl shadow-2xl overflow-hidden animate-fade-in-up transform transition-all">
         
-        <button onclick="closeDemoModal()" class="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors">
-            <i class="fa-solid fa-xmark text-lg"></i>
+        <button onclick="closeDemoModal()" class="absolute top-4 right-4 z-10 text-white hover:text-red-400 bg-black/50 hover:bg-black/70 rounded-full w-10 h-10 flex items-center justify-center transition-colors">
+            <i class="fa-solid fa-xmark text-xl"></i>
         </button>
 
         <div class="relative pt-[56.25%]">
-            <iframe id="demoVideo" 
-                    class="absolute inset-0 w-full h-full" 
-                    src="https://www.youtube.com/embed/tlI022AbnCI?enablejsapi=1" 
-                    title="Demo Video" frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
+            <iframe 
+                id="youtubeFrame"
+                class="absolute top-0 left-0 w-full h-full"
+                src="" 
+                title="Demo Aplikasi" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen>
             </iframe>
         </div>
     </div>
 </div>
 
 <script>
-    const modal = document.getElementById('demoModal');
-    const modalContent = document.getElementById('modalContent');
-    const videoFrame = document.getElementById('demoVideo');
-    let videoSrc = videoFrame.src; // Simpan link asli
-
     function openDemoModal() {
-        modal.classList.remove('hidden');
-        // Animasi Fade In sedikit delay biar halus
-        setTimeout(() => {
-            modal.classList.remove('opacity-0');
-            modalContent.classList.remove('scale-95');
-            modalContent.classList.add('scale-100');
-        }, 10);
+        const modal = document.getElementById('demoModal');
+        const frame = document.getElementById('youtubeFrame');
         
-        // Autoplay (tambah parameter autoplay di URL)
-        videoFrame.src = videoSrc + "&autoplay=1";
+        // ID Video YouTube Anda: JGHxxlBCTzA
+        // autoplay=1 : Video otomatis mulai
+        // rel=0 : Tidak menampilkan video rekomendasi channel lain di akhir
+        const videoUrl = "https://www.youtube.com/embed/JGHxxlBCTzA?autoplay=1&rel=0"; 
+
+        // 1. Munculkan Modal
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        // 2. Isi SRC iframe (Load video)
+        frame.setAttribute('src', videoUrl);
     }
 
     function closeDemoModal() {
-        // Animasi Out
-        modal.classList.add('opacity-0');
-        modalContent.classList.remove('scale-100');
-        modalContent.classList.add('scale-95');
+        const modal = document.getElementById('demoModal');
+        const frame = document.getElementById('youtubeFrame');
 
-        setTimeout(() => {
-            modal.classList.add('hidden');
-            // Matikan video saat ditutup (reset src)
-            videoFrame.src = videoSrc; 
-        }, 300); // Sesuaikan dengan durasi transition CSS
+        // 1. Sembunyikan Modal
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+
+        // 2. Kosongkan SRC (PENTING: Agar suara video berhenti total)
+        frame.setAttribute('src', '');
     }
 
-    // Tutup jika klik di luar video (background gelap)
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
+    // Menutup modal dengan tombol ESC keyboard
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
             closeDemoModal();
         }
     });
 </script>
+
+<style>
+    /* Animasi Blob Background */
+    @keyframes blob {
+        0% { transform: translate(0px, 0px) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+        100% { transform: translate(0px, 0px) scale(1); }
+    }
+    .animate-blob {
+        animation: blob 7s infinite;
+    }
+    .animation-delay-2000 {
+        animation-delay: 2s;
+    }
+
+    /* Animasi Modal Muncul */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    .animate-fade-in-up {
+        animation: fadeInUp 0.3s ease-out forwards;
+    }
+</style>
 @endsection

@@ -28,6 +28,10 @@ Route::post('/scan', [FruitController::class, 'store'])->name('scan.store');
 Route::get('/recipes', [RecipeController::class, 'index'])->name('recipes.index');
 Route::get('/recipes/detail/{slug}', [RecipeController::class, 'show'])->name('recipes.show'); // Ganti URL dikit biar ga bentrok
 Route::get('/recipes/search', [RecipeController::class, 'search'])->name('recipes.search');
+// Route untuk AJAX AI (Letakkan di dalam group middleware auth atau public, sesuai kebutuhan)
+Route::post('/recipes/generate-ai', [App\Http\Controllers\RecipeController::class, 'generateAiRecipes'])->name('recipes.generate-ai');
+Route::post('/recipes/preview-ai', [App\Http\Controllers\RecipeController::class, 'previewAi'])->name('recipes.preview-ai');
+Route::post('/recipes/store-ai', [App\Http\Controllers\RecipeController::class, 'storeAi'])->name('recipes.store-ai');
 
 // Login & Logout
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
